@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#tmux new-session -d -s glasstower 'sudo nodemon --signal SIGHUP'
+tmux new-session -d -s glasstower 'sudo node index.js'
