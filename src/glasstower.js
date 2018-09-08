@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const http = require('http');
-// const fs = require('fs');
+const fs = require('fs');
 const ws281x = require('rpi-ws281x-native');
 const convert = require('color-convert');
 const throttle = require('throttleit');
@@ -14,8 +14,9 @@ const {
     // colorwheel,
     rgb2Int,
     // getRandColor,
-} = require('./utils');
+} = require('./colors');
 
+const PORT = 80;
 const NUM_LEDS = 120;
 const ZONES = [
     [0, 4],
@@ -44,8 +45,6 @@ ws281x.init(NUM_LEDS);
 //     offset = (offset + 1) % 256;
 //     ws281x.render(pixelData);
 // }, 1000 / 120);
-
-console.log('Press <ctrl>+C to exit.');
 
 let last = Date.now();
 const interval = 1000 / 5;
@@ -112,33 +111,70 @@ const nextColor = throttle(() => {
     }
 }, 100);
 
-let serverCounter = 0;
+const extTypes = {
+    js: 'text/javascript',
+    html: 'text/html',
+};
+
+function serveFile(path, req, res) {
+    if (path === '/') {
+        path = '/index.html';
+    }
+
+    fs.readFile(`./public${path}`, function (err, content) {
+        if (err) {
+            res.writeHead(500);
+            res.end(res.statusMessage);
+        } else {
+            const ext = path.split('.').pop();
+            const type = extTypes[ext] || 'text/plain';
+
+            res.writeHead(200, {
+                'Content-Type': type,
+            });
+            res.end(content);
+        }
+    });
+}
+
+const files = [
+    '/',
+    '/client.js',
+];
 
 const server = http.createServer((req, res) => {
-    console.log(serverCounter++, req.url);
+    if (req.url === '/favicon.ico') {
+        res.writeHead(204);
+        res.end();
+    } else if (files.includes(req.url)) {
+        serveFile(req.url, req, res);
+    } else {
+        let status = 200;
 
-    if (req.url === '/prev') {
-        prevColor();
+        switch (req.url) {
+            case '/prev':
+                prevColor();
+                break;
+            case '/next':
+                nextColor();
+                break;
+            default:
+                status = 404;
+        }
+
+        res.writeHead(status);
+        res.end(res.statusMessage);
     }
-
-    if (req.url === '/next') {
-        nextColor();
-    }
-
-    res.end('ok');
 });
 
-server.listen(80);
+server.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+    console.log('Press <ctrl>+C to exit.');
+});
 
 process.on('SIGINT', function () {
     ws281x.reset();
     process.nextTick(() => {
         process.exit(0);
-    });
-});
-
-['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM', 'SIGHUP'].forEach((eventType) => {
-    process.on(eventType, () => {
-        console.log('BYE!!!', eventType);
     });
 });
