@@ -5,7 +5,6 @@
   "author": "Julien Iafrancesco",
   "scripts": {
     "start": "node index.js",
-    "precommit": "lint-staged",
     "lint": "eslint --cache -f codeframe ."
   },
   "license": "MIT",
@@ -15,13 +14,6 @@
     "throttleit": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.5.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.2"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --cache -f codeframe"
-    ]
+    "eslint": "^5.5.0"
   }
 }
