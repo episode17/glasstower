@@ -1,4 +1,9 @@
 #!/bin/bash
 
-#tmux new-session -d -s glasstower 'sudo nodemon --signal SIGHUP'
-tmux new-session -d -s glasstower 'sudo node index.js'
+CMD="tmux new -d -s glasstower"
+
+if [[ $1 = --dev ]]; then
+    $CMD "sudo nodemon index.js"
+else
+    $CMD "sudo node index.js"
+fi
