@@ -2,18 +2,31 @@
   "name": "glasstower",
   "version": "1.0.0",
   "description": "",
+  "license": "MIT",
   "author": "Julien Iafrancesco",
   "scripts": {
-    "start": "node index.js",
-    "lint": "eslint --cache -f codeframe ."
+    "client:build": "webpack --mode production",
+    "client:dev": "webpack --mode development",
+    "dev": "nodemon --watch src index.js",
+    "lint": "eslint --cache -f codeframe .",
+    "start": "node index.js"
   },
-  "license": "MIT",
   "dependencies": {
     "color-convert": "^1.9.3",
+    "express": "^4.16.3",
     "rpi-ws281x-native": "^0.9.0",
     "throttleit": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.5.0"
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "css-loader": "^1.0.0",
+    "eslint": "^5.5.0",
+    "mini-css-extract-plugin": "^0.4.2",
+    "nodemon": "^1.18.4",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0"
   }
 }

@@ -3,7 +3,7 @@
 CMD="tmux new -s glasstower"
 
 if [[ $1 = --dev ]]; then
-    $CMD "sudo nodemon -e js,html index.js"
+    $CMD "sudo npm run dev"
 else
-    $CMD -d "sudo node index.js"
+    $CMD -d "sudo npm start"
 fi
