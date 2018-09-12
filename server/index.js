@@ -137,13 +137,12 @@ api.get('/next', (req, res) => {
     res.send('OK');
 });
 
-
 // http
 const app = express();
 const server = http.createServer(app);
-const proxy = httpProxy.createProxyServer({
-    target: 'http://localhost:8080',
-});
+// const proxy = httpProxy.createProxyServer({
+//     target: 'http://localhost:8080',
+// });
 
 app.use((req, res, next) => {
     console.log(`Server: new request (${req.url})`);
@@ -151,7 +150,7 @@ app.use((req, res, next) => {
 });
 app.use(express.static('../client/public'));
 app.use('/api', api);
-app.use((req, res) => proxy.web(req, res));
+// app.use((req, res) => proxy.web(req, res));
 
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
@@ -168,7 +167,7 @@ wss.on('connection', (socket, req) => {
     socket.on('message', (message) => {
         const [index, color] = JSON.parse(message);
         for (let i = ZONES[index][0]; i < ZONES[index][1]; i++) {
-            pixelData[i] = rgb2Int(...color);
+            pixelData[i] = rgb2Int(color.r, color.g, color.b);
         }
 
         console.log('WSS: received:', index, color);

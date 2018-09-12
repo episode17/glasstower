@@ -64,8 +64,9 @@ class App extends React.Component {
     handleColorUpdate = (blockIndex, color) => {
         this.setState(state => {
             const { blocks } = state;
-            blocks[blockIndex] = {
-                ...blocks[blockIndex],
+            const trueIndex = blocks.length - 1 - blockIndex;
+            blocks[trueIndex] = {
+                ...blocks[trueIndex],
                 color,
             };
             return blocks;
@@ -86,7 +87,7 @@ class App extends React.Component {
                         {this.state.blocks.map((block, i) => (
                             <TowerBlock
                                 key={i}
-                                index={i}
+                                index={this.state.blocks.length - 1 - i}
                                 block={block}
                                 onColorUpdate={this.handleColorUpdate}
                             />
