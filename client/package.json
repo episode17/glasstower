@@ -1,6 +1,7 @@
 {
   "name": "glasstower-client",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "build": "webpack --mode production",
     "dev": "webpack-serve"
@@ -25,6 +26,7 @@
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.0",
     "webpack-serve": "^2.0.2",
+    "webpack-serve-overlay": "^0.3.0",
     "webpack-serve-waitpage": "^1.0.2"
   }
 }

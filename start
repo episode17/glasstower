@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CMD="tmux new -s glasstower"
+CMD="tmux new -s glasstower -c server"
 
 if [[ $1 = --dev ]]; then
     $CMD "sudo npm run dev"

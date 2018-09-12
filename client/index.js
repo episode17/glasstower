@@ -1,10 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import 'minireset.css';
-import './styles/global.css';
-
 import App from './components/App';
+
+if (process.env.NODE_ENV === 'development') {
+    require('webpack-serve-overlay');
+}
 
 function renderApp() {
     const app = (

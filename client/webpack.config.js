@@ -8,6 +8,7 @@ const webpackServeWaitpage = require('webpack-serve-waitpage');
 const outputPath = path.join(__dirname, '/dist');
 
 module.exports = {
+    name: 'client',
     target: 'web',
     mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
     devtool: false,
@@ -19,7 +20,7 @@ module.exports = {
     output: {
         path: outputPath,
         filename: '[name].js',
-        publicPath: '/static/',
+        publicPath: '/',
     },
     module: {
         rules: [
@@ -38,21 +39,16 @@ module.exports = {
         ],
     },
     plugins: [
-        new CleanWebpackPlugin([outputPath]),
         new MiniCssExtractPlugin(),
+        new CleanWebpackPlugin([outputPath]),
         new HtmlWebpackPlugin({
             template: './index.html',
         }),
     ],
-    stats: 'verbose',
+    stats: 'normal',
     serve: {
         add: (app, middleware, options) => {
-            // Be sure to pass the options argument from the arguments
             app.use(webpackServeWaitpage(options));
-
-            // Make sure the usage of webpack-serve-waitpage will be before the following commands if exists
-            // middleware.webpack();
-            // middleware.content();
         },
     },
 };

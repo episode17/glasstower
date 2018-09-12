@@ -1,26 +1,14 @@
 {
   "name": "glasstower",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "license": "MIT",
   "author": "Julien Iafrancesco",
   "scripts": {
-    "dev": "nodemon --watch src index.js",
-    "lint": "eslint --cache -f codeframe .",
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "color-convert": "^1.9.3",
-    "express": "^4.16.3",
-    "throttleit": "^1.0.0"
+    "lint": "eslint --cache -f codeframe ."
   },
   "devDependencies": {
     "eslint": "^5.5.0",
-    "eslint-plugin-react": "^7.11.1",
-    "nodemon": "^1.18.4",
-    "rimraf": "^2.6.2"
-  },
-  "optionalDependencies": {
-    "rpi-ws281x-native": "^0.9.0"
+    "eslint-plugin-react": "^7.11.1"
   }
 }
