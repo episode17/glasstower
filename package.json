@@ -5,8 +5,6 @@
   "license": "MIT",
   "author": "Julien Iafrancesco",
   "scripts": {
-    "client:build": "webpack --mode production",
-    "client:dev": "webpack --mode development",
     "dev": "nodemon --watch src index.js",
     "lint": "eslint --cache -f codeframe .",
     "start": "node index.js"
@@ -14,19 +12,15 @@
   "dependencies": {
     "color-convert": "^1.9.3",
     "express": "^4.16.3",
-    "rpi-ws281x-native": "^0.9.0",
     "throttleit": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.2",
-    "css-loader": "^1.0.0",
     "eslint": "^5.5.0",
-    "mini-css-extract-plugin": "^0.4.2",
+    "eslint-plugin-react": "^7.11.1",
     "nodemon": "^1.18.4",
-    "webpack": "^4.17.2",
-    "webpack-cli": "^3.1.0"
+    "rimraf": "^2.6.2"
+  },
+  "optionalDependencies": {
+    "rpi-ws281x-native": "^0.9.0"
   }
 }

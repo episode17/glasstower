@@ -34,7 +34,7 @@ const ZONES = [
 let pixelData = new Uint32Array(NUM_LEDS);
 
 ws281x.init(NUM_LEDS);
-ws281x.setBrightness(255);
+ws281x.setBrightness(70);
 
 // var offset = 0;
 // setInterval(function () {
@@ -129,7 +129,7 @@ api.get('/next', (req, res) => {
 
 const app = express();
 
-app.use(express.static('./public'));
+app.use(express.static('./client/dist'));
 app.use('/api', api);
 
 app.listen(PORT, () => {
