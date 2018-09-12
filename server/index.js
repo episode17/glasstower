@@ -3,9 +3,12 @@ const tryRequire = require('./tryRequire');
 
 const ws281x = tryRequire('rpi-ws281x-native');
 
+const http = require('http');
+const httpProxy = require('http-proxy');
+const express = require('express');
+const WebSocket = require('ws');
 // const convert = require('color-convert');
 const throttle = require('throttleit');
-const express = require('express');
 
 // const {
 //     randInt,
@@ -60,15 +63,15 @@ if (ws281x) {
         last = now;
 
         // <rainbow>
-        for (let c = 0; c < NUM_LEDS; c++) {
-            pixelData[c] = colorwheel((offset + c) % 256);
-
-            // for (let z = ZONES[c][0]; z < ZONES[c][1]; z++) {
-            //     pixelData[z] = colorwheel((offset + c) % 256);
-            // }
-        }
-
-        offset = (offset + 1) % 256;
+        // for (let c = 0; c < NUM_LEDS; c++) {
+        //     pixelData[c] = colorwheel((offset + c) % 256);
+        //
+        //     // for (let z = ZONES[c][0]; z < ZONES[c][1]; z++) {
+        //     //     pixelData[z] = colorwheel((offset + c) % 256);
+        //     // }
+        // }
+        //
+        // offset = (offset + 1) % 256;
         // </rainbow>
 
         // <tower>
@@ -87,6 +90,17 @@ if (ws281x) {
         //     j = 0;
         // }
         // </tower>
+
+        // <socket>
+        // const [r, g, b] = convert.hsv.rgb(j, 100, 100);
+        // pixelData.fill(0);
+
+        // for (let k = 0; k < i + 1; k++) {
+        //     for (let z = ZONES[k][0]; z < ZONES[k][1]; z++) {
+        //         pixelData[z] = rgb2Int(r, g, b);
+        //     }
+        // }
+        // </socket>
 
         ws281x.render(pixelData);
     };
@@ -110,6 +124,7 @@ const nextColor = throttle(() => {
     }
 }, 200);
 
+// api
 const api = express.Router();
 
 api.get('/prev', (req, res) => {
@@ -122,21 +137,53 @@ api.get('/next', (req, res) => {
     res.send('OK');
 });
 
+
+// http
 const app = express();
+const server = http.createServer(app);
+// const proxy = httpProxy.createProxyServer({
+//     target: 'http://localhost:8080'
+// });
 
-app.use(express.static('../client/dist'));
+app.use((req, res, next) => {
+    console.log(`Server: new request (${req.url})`);
+    next();
+});
+app.use(express.static('../client/public'));
 app.use('/api', api);
+// app.use((req, res) => proxy.web(req, res));
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
     console.log('Press <ctrl>+C to exit.');
 });
 
-if (ws281x) {
-    process.on('SIGINT', function () {
-        ws281x.reset();
-        process.nextTick(() => {
-            process.exit();
-        });
+// websocket
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (socket, req) => {
+    const ip = req.connection.remoteAddress;
+    console.log(`WSS: new connection (${ip})`);
+
+    socket.on('message', ([index, color]) => {
+        for (let i = ZONES[index][0]; i < ZONES[index][1]; i++) {
+            pixelData[i] = rgb2Int(...color);
+        }
+
+        console.log('received: %s', message);
     });
-}
+});
+
+process.on('SIGINT', () =>   {
+    if (ws281x) {
+        ws281x.reset();
+    }
+
+    wss.clients.forEach(socket => {
+        socket.terminate();
+    })
+
+    process.nextTick(() => {
+        process.exit();
+    });
+});

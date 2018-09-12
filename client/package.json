@@ -9,12 +9,16 @@
   "dependencies": {
     "color-convert": "^1.9.3",
     "minireset.css": "0.0.3",
+    "polished": "^2.0.3",
     "react": "^16.5.0",
+    "react-color": "^2.14.1",
     "react-dom": "^16.5.0",
+    "react-onclickout": "^2.0.8",
     "styled-components": "^3.4.6"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.2",

@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpackServeWaitpage = require('webpack-serve-waitpage');
 
-const outputPath = path.join(__dirname, '/dist');
+const outputPath = path.join(__dirname, '/public');
 
 module.exports = {
     name: 'client',
@@ -41,15 +41,22 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin(),
-        new CleanWebpackPlugin([outputPath]),
+        new CleanWebpackPlugin([outputPath], {
+            exclude: [
+                'favicon.ico',
+            ],
+        }),
         new HtmlWebpackPlugin({
             template: './index.html',
         }),
     ],
     stats: 'normal',
     serve: {
+        content: path.join(__dirname, '/public'),
         add: (app, middleware, options) => {
-            app.use(webpackServeWaitpage(options));
+            app.use(webpackServeWaitpage(options, {
+                disableWhenValid: false,
+            }));
         },
     },
 };

@@ -8,6 +8,7 @@
     "lint": "eslint --cache -f codeframe ."
   },
   "devDependencies": {
+    "babel-eslint": "^9.0.0",
     "eslint": "^5.5.0",
     "eslint-plugin-react": "^7.11.1"
   }
