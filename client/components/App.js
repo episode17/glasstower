@@ -36,18 +36,18 @@ const BLOCKS = [
 class App extends React.Component {
     state = {
         socketReady: false,
-        blocks: BLOCKS
+        blocks: BLOCKS,
     };
 
     componentDidMount() {
-        this.socket = new WebSocket('ws://localhost');
+        this.socket = new WebSocket(`ws://${location.host}`);
 
-        this.socket.addEventListener('open', (e) => {
+        this.socket.addEventListener('open', () => {
             console.log('WS: open');
             this.setState({ socketReady: true });
         });
 
-        this.socket.addEventListener('close', (e) => {
+        this.socket.addEventListener('close', () => {
             console.log('WS: close');
             this.setState({ socketReady: false });
         });
@@ -67,12 +67,13 @@ class App extends React.Component {
             blocks[blockIndex] = {
                 ...blocks[blockIndex],
                 color,
-            }
+            };
             return blocks;
         });
 
         if (this.socket.readyState === ReadyState.OPEN) {
-            this.socket.send([blockIndex, toRgb(color)])
+            const data = [blockIndex, toRgb(color)];
+            this.socket.send(JSON.stringify(data));
         }
     }
 

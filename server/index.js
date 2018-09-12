@@ -16,8 +16,8 @@ const throttle = require('throttleit');
 // } = require('./utils');
 
 const {
-    colorwheel,
-    // rgb2Int,
+    // colorwheel,
+    rgb2Int,
     // getRandColor,
 } = require('./colors');
 
@@ -39,7 +39,7 @@ const ZONES = [
 
 let i = ZONES.length - 1;
 // let j = 0;
-let offset = 0;
+// let offset = 0;
 // let color = getRandColor();
 
 let pixelData = new Uint32Array(NUM_LEDS);
@@ -141,9 +141,9 @@ api.get('/next', (req, res) => {
 // http
 const app = express();
 const server = http.createServer(app);
-// const proxy = httpProxy.createProxyServer({
-//     target: 'http://localhost:8080'
-// });
+const proxy = httpProxy.createProxyServer({
+    target: 'http://localhost:8080',
+});
 
 app.use((req, res, next) => {
     console.log(`Server: new request (${req.url})`);
@@ -151,7 +151,7 @@ app.use((req, res, next) => {
 });
 app.use(express.static('../client/public'));
 app.use('/api', api);
-// app.use((req, res) => proxy.web(req, res));
+app.use((req, res) => proxy.web(req, res));
 
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
@@ -165,12 +165,13 @@ wss.on('connection', (socket, req) => {
     const ip = req.connection.remoteAddress;
     console.log(`WSS: new connection (${ip})`);
 
-    socket.on('message', ([index, color]) => {
+    socket.on('message', (message) => {
+        const [index, color] = JSON.parse(message);
         for (let i = ZONES[index][0]; i < ZONES[index][1]; i++) {
             pixelData[i] = rgb2Int(...color);
         }
 
-        console.log('received: %s', message);
+        console.log('WSS: received:', index, color);
     });
 });
 
@@ -181,7 +182,7 @@ process.on('SIGINT', () =>   {
 
     wss.clients.forEach(socket => {
         socket.terminate();
-    })
+    });
 
     process.nextTick(() => {
         process.exit();
