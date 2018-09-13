@@ -1,5 +1,6 @@
 import React from 'react';
 // import styled from 'styled-components';
+import { rgb } from 'polished';
 
 import 'minireset.css';
 import '../styles/global.css';
@@ -20,17 +21,17 @@ const ReadyState = {
 };
 
 const BLOCKS = [
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
-    { color: '#f00' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
+    { color: '#000' },
 ];
 
 class App extends React.Component {
@@ -78,10 +79,28 @@ class App extends React.Component {
         }
     }
 
+    handleRandomPaletteClick = () => {
+        fetch('http://colormind.io/api/', {
+            method: 'POST',
+            body: JSON.stringify({
+                model: 'default',
+            }),
+        })
+            .then(res => res.json())
+            .then(({ result }) => {
+                result.forEach((color, i) => {
+                    this.handleColorUpdate(i + 1, rgb(...color));
+                    this.handleColorUpdate(i + 6, rgb(...color));
+                })
+            })
+    }
+
     render() {
         return (
             <div>
-                <AppHeader />
+                <AppHeader>
+                    <button type="button" onClick={this.handleRandomPaletteClick}>Random palette</button>
+                </AppHeader>
                 <AppMain>
                     <Tower>
                         {this.state.blocks.map((block, i) => (
